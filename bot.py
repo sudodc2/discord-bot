@@ -8,17 +8,18 @@ load_dotenv()
 intents = discord.Intents.default()
 intents.message_content = True
 intents.voice_states = True
+intents.members = True
+intents.guilds = True
 
-bot = commands.Bot(command_prefix="/", intents=intents)
+bot = commands.Bot(command_prefix="!", intents=intents)
 
 
 @bot.event
 async def on_ready():
     print(f"{bot.user} is online and ready!")
     await bot.change_presence(activity=discord.Activity(
-        type=discord.ActivityType.listening, name="/help"
+        type=discord.ActivityType.listening, name="/commands"
     ))
-    # Sync slash commands
     try:
         synced = await bot.tree.sync()
         print(f"Synced {len(synced)} command(s)")
@@ -27,9 +28,17 @@ async def on_ready():
 
 
 async def setup_hook():
-    await bot.load_extension("cogs.gif_commands")
-    await bot.load_extension("cogs.music")
-    await bot.load_extension("cogs.fun")
+    extensions = [
+        "cogs.storage",
+        "cogs.gif_commands",
+        "cogs.music",
+        "cogs.fun",
+        "cogs.community",
+        "cogs.moderation",
+        "cogs.server_setup",
+    ]
+    for ext in extensions:
+        await bot.load_extension(ext)
 
 
 bot.setup_hook = setup_hook
@@ -38,6 +47,5 @@ if __name__ == "__main__":
     token = os.getenv("DISCORD_TOKEN")
     if not token:
         print("ERROR: No DISCORD_TOKEN found in .env file!")
-        print("Create a .env file with: DISCORD_TOKEN=your_bot_token_here")
     else:
         bot.run(token)
