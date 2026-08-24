@@ -139,7 +139,6 @@ class ServerSetup(commands.Cog):
         store = self.storage()
         guild_data = store.get_guild(guild.id)
 
-        # Delete all existing channels.
         for channel in list(guild.channels):
             try:
                 await channel.delete(
@@ -148,7 +147,6 @@ class ServerSetup(commands.Cog):
             except Exception:
                 pass
 
-        # Create the parent age role if it does not exist.
         ages_parent_role = discord.utils.get(
             guild.roles,
             name="Ages",
@@ -183,7 +181,8 @@ class ServerSetup(commands.Cog):
                 )
 
         for category_name, items in LAYOUT:
-            category_overwrites = None
+            # Must be a dict. Passing None crashes this Discord library.
+            category_overwrites = {}
 
             if "ADMIN" in category_name:
                 category_overwrites = admin_overwrites
@@ -198,7 +197,6 @@ class ServerSetup(commands.Cog):
                 key = item[1]
                 kind = item[2] if len(item) > 2 else "text"
 
-                # Voice channels cannot receive messages or pins.
                 if kind == "voice":
                     channel = await guild.create_voice_channel(
                         name,
@@ -242,7 +240,15 @@ class ServerSetup(commands.Cog):
                     )
 
                 if key == "commands":
-                    commands_text = "**Bot Commands** | /gif | /caption | /play /skip /stop /queue /pause /resume /nowplaying /loop | /confess | /curseboard | /daily /rob /bet /rep /profile /age /trivia /rps /numguess /poll /avatar /serverinfo /userinfo /8ball /coinflip /roll /remindme /reserved"
+                    commands_text = (
+                        "**Bot Commands** | /gif | /caption | /play "
+                        "/skip /stop /queue /pause /resume "
+                        "/nowplaying /loop | /confess | /curseboard | "
+                        "/daily /rob /bet /rep /profile /age /trivia "
+                        "/rps /numguess /poll /avatar /serverinfo "
+                        "/userinfo /8ball /coinflip /roll /remindme "
+                        "/reserved"
+                    )
 
                     commands_message = await channel.send(
                         commands_text
