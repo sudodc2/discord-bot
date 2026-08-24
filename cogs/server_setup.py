@@ -156,7 +156,7 @@ class ServerSetup(commands.Cog):
 
         if not ages_parent_role:
             try:
-                ages_parent_role = await guild.create_role(
+                await guild.create_role(
                     name="Ages",
                     permissions=discord.Permissions.none(),
                     reason="Age role bucket",
@@ -242,20 +242,7 @@ class ServerSetup(commands.Cog):
                     )
 
                 if key == "commands":
-                    commands_text = (
-                        "**Bot Commands** 
-"
-                        "`/gif` convert image to gif or make a meme caption\n"
-                        "`/caption` meme caption image\n"
-                        "`/play /skip /stop /queue /pause /resume "
-                        "/nowplaying /loop` music\n"
-                        "`/confess` anonymous confession\n"
-                        "`/curseboard` curse leaderboard\n"
-                        "`/daily /rob /bet /rep /profile /age /trivia "
-                        "/rps /numguess /poll /avatar /serverinfo "
-                        "/userinfo /8ball /coinflip /roll /remindme "
-                        "/reserved`"
-                    )
+                    commands_text = "**Bot Commands** | /gif | /caption | /play /skip /stop /queue /pause /resume /nowplaying /loop | /confess | /curseboard | /daily /rob /bet /rep /profile /age /trivia /rps /numguess /poll /avatar /serverinfo /userinfo /8ball /coinflip /roll /remindme /reserved"
 
                     commands_message = await channel.send(
                         commands_text
